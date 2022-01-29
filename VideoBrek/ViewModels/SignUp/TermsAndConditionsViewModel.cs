@@ -196,10 +196,11 @@ namespace VideoBrek.ViewModels.SignUp
                     {
                         AppLoginModel authenticateModel = new AppLoginModel
                         {
-                            Email = registerModel.Email,
-                            Password = registerModel.Password
+                            userNameOrEmailAddress = registerModel.userName,
+                            Password = registerModel.Password,
+                            rememberClient = true
                         };
-                        var authenticaterResult = await new AppUsersService().GetLoginDetail(authenticateModel, AppUsersUrl.Register);
+                        var authenticaterResult = await new AppUsersService().GetLoginDetail(authenticateModel, AppUsersUrl.Login);
                         if (authenticaterResult.Status == 200)
                         {
                             Device.BeginInvokeOnMainThread(async () =>
@@ -243,10 +244,11 @@ namespace VideoBrek.ViewModels.SignUp
             IsLoading = true;
             try
             {
-                var getPrivacyPolicy = await Task.Run(() => new MediaHandlerService().getData(MediaHandlerUrl.getTermsAgreement));
-                if (getPrivacyPolicy.Status == 200)
+                //var getPrivacyPolicy = await Task.Run(() => new MediaHandlerService().getData(MediaHandlerUrl.getTermsAgreement));
+                var getMedia = await Task.Run(() => new MediaHandlerService().getData(MediaHandlerUrl.getTermsAgreement));
+                if (getMedia.Status == 200)
                 {
-                    TermsAndConditionsData = JsonConvert.DeserializeObject<TermsAndConditionsModel>(getPrivacyPolicy.Response.ToString());
+                    TermsAndConditionsData = JsonConvert.DeserializeObject<TermsAndConditionsModel>(getMedia.Response.ToString());
 
                     if (TermsAndConditionsData != null)
                     {
@@ -265,7 +267,7 @@ namespace VideoBrek.ViewModels.SignUp
                 }
                 else
                 {
-                    CrossToastPopUp.Current.ShowToastMessage(getPrivacyPolicy.Message, ToastLength.Short);
+                    CrossToastPopUp.Current.ShowToastMessage(getMedia.Message, ToastLength.Short);
                 }
             }
             catch (Exception ex)

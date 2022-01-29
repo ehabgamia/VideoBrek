@@ -10,6 +10,9 @@ using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.PlatformConfiguration.iOSSpecific;
 using Xamarin.Forms.Xaml;
+using VideoBrek.Views.LogIn;
+using VideoBrek.Views.SignUp;
+
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace VideoBrek
 {
@@ -68,7 +71,7 @@ namespace VideoBrek
                 "CarouselView_Experimental",
                 "IndicatorView_Experimental"
             });
-            MainPage = new Xamarin.Forms.NavigationPage(new Home());
+            MainPage = new Xamarin.Forms.NavigationPage(new LogIn());
         }
 
         protected override void OnStart()

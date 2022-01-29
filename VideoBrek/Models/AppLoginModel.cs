@@ -2,7 +2,9 @@
 {
     public class AppLoginModel
     {
-        public string Email { get; set; }
+        //public string Email { get; set; }
+        public string userNameOrEmailAddress { get; set; }
+        public  bool rememberClient { get; set; }
         public string Password { get; set; }
     }
 

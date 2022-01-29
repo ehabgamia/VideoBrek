@@ -95,8 +95,9 @@ namespace VideoBrek.ViewModels.LogIn
                 {
                     AppLoginModel authenticateModel = new AppLoginModel
                     {
-                        Email = UserName.Value,
-                        Password = Password.Value
+                        userNameOrEmailAddress = UserName.Value,
+                        Password = Password.Value,
+                        rememberClient = true
                     };
 
                     IsButtonVisible = false;
@@ -105,9 +106,14 @@ namespace VideoBrek.ViewModels.LogIn
                     if (result.Status == 200)
                     {
                         var UserData = JsonConvert.DeserializeObject<UserProfileModel>(result.Response.ToString());
-                        GlobalConstant.AccessToken = UserData.AccessToken;
+                        var UserDataProfile = JsonConvert.DeserializeObject<UserProfileConfigModel>(result.Response.ToString());
+
+                        UserData.UserProfileConfig = UserDataProfile;
+
+                        GlobalConstant.AccessToken = result.accessToken; // UserData.AccessToken;
                         GlobalConstant.UserProfileDetails = UserData;
-                        await _objShared.SaveApplicationProperty("UserProfileDetails", result.Response.ToString());
+
+                        //await _objShared.SaveApplicationProperty("UserProfileDetails", result.Response.ToString());
 
                         await gotoHomePage();
                         CrossToastPopUp.Current.ShowToastMessage(result.Message, ToastLength.Short);

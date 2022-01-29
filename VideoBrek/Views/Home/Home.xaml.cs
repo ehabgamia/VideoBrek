@@ -14,7 +14,7 @@ namespace VideoBrek.Views.Home
             NavigationPage.SetHasNavigationBar(this, false);
             var explore = new NavigationPage(new Explore());
             explore.IconImageSource = "ic_Explore.png";
-            explore.Title = "Explore";
+            explore.Title = "Home";
             Children.Add(explore);
 
             var searchPage = new NavigationPage(new Search());

@@ -9,6 +9,7 @@ using VideoBrek.Models;
 using VideoBrek.PCL.Common;
 using Newtonsoft.Json;
 using static VideoBrek.Models.MediaHandlerModel;
+using Newtonsoft.Json.Linq;
 
 namespace VideoBrek.PCL.Helper
 {
@@ -16,7 +17,7 @@ namespace VideoBrek.PCL.Helper
     {
 
 
-        public async Task<T> Get<T>(string url)
+        public async Task<ResultModel> Get<T>(string url)
         {
             using (var client = new HttpClient(new NativeMessageHandler()))
             {
@@ -33,19 +34,27 @@ namespace VideoBrek.PCL.Helper
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
+                    var result = JsonConvert.DeserializeObject<JObject>(content);
+                    ResultModel rslt = new ResultModel();
                     try
                     {
-                        string res = content.Replace("null", "\"\"");
-                        return JsonConvert.DeserializeObject<T>(res);
+                        //string res = content.Replace("null", "\"\"");
+                        rslt.Response = result["result"]["items"].ToString();
+                        rslt.Status = 200;
+                        return rslt;
+                        
+                        //return JsonConvert.DeserializeObject<ResultModel>(content);
 
                     }
                     catch (Exception ex)
                     {
-                        return JsonConvert.DeserializeObject<T>(content);
+                        return JsonConvert.DeserializeObject<ResultModel>(content);
                     }
+                    
                 }
             }
-            return default(T);
+            
+            return default(ResultModel);
         }
 
         public async Task<T> GetMedia<T>(string url)
@@ -111,7 +120,18 @@ namespace VideoBrek.PCL.Helper
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<ResultModel>(content);
+                    var result = JsonConvert.DeserializeObject<JObject>(content);
+                    ResultModel rslt = new ResultModel();
+                    if (result.HasValues)
+                    {
+                        //rslt.accessToken = result["result"]["accessToken"].ToString();
+                        //rslt.userId = int.Parse(result["result"]["userId"].ToString());
+                        //rslt.success = result["success"].ToString(); 
+                        rslt.Response = result["result"].ToString();
+                        rslt.Status = 200;
+                    }
+                    return rslt;
+                    //return JsonConvert.DeserializeObject<ResultModel>(content);
                 }
                 else
                 {
@@ -193,6 +213,57 @@ namespace VideoBrek.PCL.Helper
                 {
                     var content = await response.Content.ReadAsStringAsync();
                     return JsonConvert.DeserializeObject<ResultModel>(content);
+                }
+                else
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<ResultModel>(content);
+                }
+            }
+        }
+
+        public async Task<ResultModel> Put<T>(T obj, string url)
+        {
+            ResultModel resp = new ResultModel { Status = 0, Message = "", Response = null };
+            using (var client = new HttpClient(new NativeMessageHandler()))
+            {
+                client.BaseAddress = new Uri(GlobalConstant.BaseUrl);
+
+                var json = JsonConvert.SerializeObject(obj);
+                var sendContent = new StringContent(json, Encoding.UTF8, "application/json");
+                if (!string.IsNullOrEmpty(GlobalConstant.AccessToken))
+                {
+                    client.DefaultRequestHeaders.Add("Authorization", "bearer" + " " + GlobalConstant.AccessToken);
+                }
+                else
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+
+                HttpResponseMessage response = new HttpResponseMessage();
+                try
+                {
+                    response = await client.PutAsync(client.BaseAddress + url, sendContent);
+                }
+                catch (Exception ex)
+                {
+                    resp.Message = ex.Message;
+                }
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    var result = JsonConvert.DeserializeObject<JObject>(content);
+                    ResultModel rslt = new ResultModel();
+                    if (result.HasValues)
+                    {
+                        //rslt.accessToken = result["result"]["accessToken"].ToString();
+                        //rslt.userId = int.Parse(result["result"]["userId"].ToString());
+                        //rslt.success = result["success"].ToString(); 
+                        rslt.Response = result["result"].ToString();
+                        rslt.Status = 200;
+                    }
+                    return rslt;
+                    //return JsonConvert.DeserializeObject<ResultModel>(content);
                 }
                 else
                 {

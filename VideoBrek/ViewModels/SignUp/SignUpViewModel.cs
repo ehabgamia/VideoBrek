@@ -93,12 +93,15 @@ namespace VideoBrek.ViewModels.SignUp
                     UserProfileModel registerModel = new UserProfileModel
                     {
                         UserId = 0,
-                        FullName = FullName.Value,
+                        name = FullName.Value,
+                        userName = FullName.Value,
+                        Surname = FullName.Value,
+                        EmailAddress = Email.Value,
                         Email = Email.Value,
                         PhoneNumber = PhoneNumber.Value,
                         Password = Password.Value,
                         UserVerified = true,
-                        IsActive = false,
+                        IsActive = true,
                         Latitude = GlobalConstant.Latitude,
                         Longitude = GlobalConstant.Longitude,
                         UserTypeId = 0,

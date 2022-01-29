@@ -25,5 +25,11 @@ namespace VideoBrek.Models
         public UserProfileConfigModel UserProfileConfig { get; set; }
         public List<UserDeviceModel> UserDevice { get; set; }
         public List<UserMyListModel> UserMyList { get; set; }
+
+        public string userName { get; set; }
+        public string name { get; set; }
+        public string Surname { get; set; }
+        public string EmailAddress { get; set; }
+        public string[] RoleNames { get; set; }
     }
 }

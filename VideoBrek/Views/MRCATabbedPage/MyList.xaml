@@ -53,7 +53,7 @@
             <!--Edit to MyList Code-->
 
 
-            <StackLayout Padding="0">
+            <!--<StackLayout Padding="0">
                 <Frame BackgroundColor="Transparent" CornerRadius="20" HeightRequest="100">
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -271,7 +271,7 @@
                         </Grid>
                     </Frame>
                 </StackLayout>
-            </StackLayout>
+            </StackLayout>-->
                 
 
         </Grid>

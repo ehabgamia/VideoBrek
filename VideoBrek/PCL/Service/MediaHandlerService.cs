@@ -30,6 +30,21 @@ namespace VideoBrek.PCL.Service
             }
         }
 
+        public async Task<ResultModel> getMedia(int model, string Url)
+        {
+            ResultModel resp = null;
+            try
+            {
+                resp = await _helper.Get<ResultModel>(Url);
+                return resp;
+            }
+            catch (Exception ex)
+            {
+                //Crashes.TrackError(ex);
+                return resp;
+            }
+        }
+
         public async Task<ResultModel> searchMedia(SearchModel model, string Url)
         {
             ResultModel resultModel = new ResultModel();
@@ -51,7 +66,7 @@ namespace VideoBrek.PCL.Service
             ResultModel resultModel = new ResultModel();
             try
             {
-                resultModel = await _helper.Post<UserProfileSettingsModel>(model, Url);
+                resultModel = await _helper.Put<UserProfileSettingsModel>(model, Url);
 
                 return resultModel;
             }

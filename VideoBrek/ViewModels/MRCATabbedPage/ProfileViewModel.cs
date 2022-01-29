@@ -103,7 +103,7 @@ namespace VideoBrek.ViewModels.MRCATabbedPage
                 userProfileSettingsModel.UserVerified = UserProfileDetails.UserProfileConfig.UserVerified;
                 userProfileSettingsModel.UserId = UserProfileDetails.UserProfileConfig.UserId;
                 userProfileSettingsModel.PhoneNumber = UserProfileDetails.UserProfileConfig.PhoneNumber;
-                userProfileSettingsModel.Email = UserProfileDetails.UserProfileConfig.Email;
+                userProfileSettingsModel.EmailAddress = UserProfileDetails.UserProfileConfig.Email;
                 userProfileSettingsModel.StreamQualityId = UserProfileDetails.UserProfileConfig.StreamQualityId;
 
                 var getupdateUserSettings = await Task.Run(() => new MediaHandlerService().updateUserSettings(userProfileSettingsModel, MediaHandlerUrl.UpdateSettings));
@@ -146,7 +146,7 @@ namespace VideoBrek.ViewModels.MRCATabbedPage
                     IsLoading = true;
                     Device.BeginInvokeOnMainThread(async () =>
                     {
-                        Application.Current.MainPage = new NavigationPage(new VideoBrek.Views.MRCATabbedPage.Explore.Explore());
+                        Application.Current.MainPage = new NavigationPage(new VideoBrek.Views.SignUp.SignUp());
                     });
                 });
             }

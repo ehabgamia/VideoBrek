@@ -15,6 +15,8 @@ using Plugin.Toast;
 using Plugin.Toast.Abstractions;
 using Xamarin.Forms;
 using static VideoBrek.Models.MediaHandlerModel;
+using VideoBrek.PCL.Service;
+using VideoBrek.PCL.Common;
 
 namespace VideoBrek.ViewModels.Explore
 {
@@ -120,31 +122,34 @@ namespace VideoBrek.ViewModels.Explore
 
 
         #region Methods
-        public void getAllMedias()
+        public async Task getAllMedias()
         {
             if (IsLoading)
                 return;
             IsLoading = true;
             try
             {
-                var assembly = IntrospectionExtensions.GetTypeInfo(typeof(ExploreViewModel)).Assembly;
-                Stream stream = assembly.GetManifestResourceStream("VideoBrek.Resources.MediaData.json");
-                string jsonString = "";
+                
+                var getMedia = await new MediaHandlerService().getData(MediaHandlerUrl.getMedias + GlobalConstant.UserProfileDetails.UserId);
 
-                using (var reader = new StreamReader(stream))
-                {
-                    jsonString = reader.ReadToEnd();
-                }
+                //var assembly = IntrospectionExtensions.GetTypeInfo(typeof(ExploreViewModel)).Assembly;
+                //Stream stream = assembly.GetManifestResourceStream("VideoBrek.Resources.MediaData.json");
+                //string jsonString = "";
+
+                //using (var reader = new StreamReader(stream))
+                //{
+                //    jsonString = reader.ReadToEnd();
+                //}
 
 
                 //CarouselViewDataSource = MyDataSourceAll.ToList().OrderBy(a => a.DisplayOrder).ToList().FirstOrDefault().Media;
                 //CollectionViewDataSource = MyDataSourceAll.Skip(1).ToList();
 
-                var getAllMediasData = JsonConvert.DeserializeObject<ResultModel>(jsonString.ToString());
+                //var getAllMediasData = JsonConvert.DeserializeObject<ResultModel>(jsonString.ToString());
                 //var getAllMediasData = await Task.Run(() => new MediaHandlerService().getData(MediaHandlerUrl.getMedias));
-                if (getAllMediasData.Status == 200)
+                if (getMedia.Status == 200)
                 {
-                    MyDataSourceAll = JsonConvert.DeserializeObject<List<GetMediasModel>>(getAllMediasData.Response.ToString());
+                    MyDataSourceAll = JsonConvert.DeserializeObject<List<GetMediasModel>>(getMedia.Response.ToString());
                     if (MyDataSourceAll.Count > 0)
                     {
                         CarouselViewDataSource = MyDataSourceAll.ToList().OrderBy(a => a.DisplayOrder).ToList().FirstOrDefault().Media;
@@ -152,7 +157,7 @@ namespace VideoBrek.ViewModels.Explore
 
                         Device.StartTimer(TimeSpan.FromSeconds(5), (Func<bool>)(() =>
                         {
-                            Position = (Position + 1) % MyDataSourceAll.ToList().OrderBy(a => a.DisplayOrder).ToList().FirstOrDefault().Media.Count;
+                            //Position = (Position + 1) % MyDataSourceAll.ToList().OrderBy(a => a.DisplayOrder).ToList().FirstOrDefault().Media.Count;
 
                             return true;
                         }));
@@ -161,7 +166,7 @@ namespace VideoBrek.ViewModels.Explore
                 }
                 else
                 {
-                    CrossToastPopUp.Current.ShowToastMessage(getAllMediasData.Message, ToastLength.Short);
+                    CrossToastPopUp.Current.ShowToastMessage(getMedia.Message, ToastLength.Short);
                 }
 
             }
